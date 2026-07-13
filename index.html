@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hustle Tracker - Misi Selesaikan Impian & Repair 🚀</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&family=Space+Grotesk:wght=500;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti for Celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+        }
+        .title-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        /* Glassmorphism custom styles */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-red {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+        }
+        .glow-amber {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+        }
+        .glow-blue {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        .glow-green {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen pb-12 transition-all duration-300">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        
+        <!-- TOP HEADER & MOTIVATIONAL SYSTEM -->
+        <header class="mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1 animate-pulse">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Live Hustle
+                        </span>
+                        <span id="syncBadge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-500/10 text-slate-400 border border-slate-500/20 flex items-center gap-1">
+                            <i class="fa-solid fa-circle-notch fa-spin text-[10px]"></i> Connecting Cloud...
+                        </span>
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-indigo-400 to-amber-400 title-font">
+                        HUSTLE TARGET TRACKER 🔥
+                    </h1>
+                    <p class="text-sm text-slate-400">Misi Selesaikan Beban, Baiki Kenderaan & Capai Impian Emas!</p>
+                </div>
+
+                <!-- QUICK CONTROLS -->
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleFirebaseModal()" class="px-4 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/30 hover:border-indigo-500/50 rounded-xl text-xs font-semibold transition flex items-center gap-2">
+                        <i class="fa-solid fa-cloud"></i> Firebase Status
+                    </button>
+                    <button onclick="triggerResetWithConfirm()" class="px-3 py-2 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-500/20 text-rose-300 rounded-xl text-xs font-semibold transition flex items-center gap-2" title="Reset default items from pictures">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- MOTIVATIONAL QUOTE BOARD -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-950/70 via-slate-900/90 to-purple-950/70 p-5 sm:p-6 border border-indigo-500/20 shadow-xl">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-8xl text-indigo-400 pointer-events-none">
+                    <i class="fa-solid fa-quote-right"></i>
+                </div>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+                    <div class="space-y-2">
+                        <span class="text-[10px] tracking-widest font-extrabold uppercase text-amber-400 px-2 py-0.5 bg-amber-400/10 rounded border border-amber-400/20">
+                            Quote Pembakar Semangat Semasa ⚡
+                        </span>
+                        <div id="quoteContainer" class="min-h-[50px] transition-all duration-300">
+                            <p id="quoteText" class="text-base sm:text-lg font-bold text-slate-100 italic leading-relaxed">
+                                "Sikit-sikit, lama-lama motor gempak semula! Jangan mengalah sebelum berjuang."
+                            </p>
+                            <p id="quoteTranslate" class="text-xs sm:text-sm text-indigo-300 font-medium mt-1">
+                                "Bit by bit, eventually the bike is awesome again! Do not give up before fighting."
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="triggerNewQuote()" class="mt-2 sm:mt-0 flex-shrink-0 px-3.5 py-1.5 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/40 text-indigo-300 hover:text-white transition text-xs font-semibold flex items-center gap-1.5 border border-indigo-500/30">
+                        <i class="fa-solid fa-shuffle"></i> Tukar Quote
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- SUMMARY BANNER POPUPS (DASHBOARD METRICS) -->
+        <section class="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 mb-8">
+            
+            <!-- CURRENT POOL / DUIT TERKUMPUL -->
+            <div class="col-span-2 md:col-span-1 glass-card rounded-2xl p-4 border-l-4 border-emerald-500 glow-green flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-xs text-emerald-400 font-bold tracking-wide uppercase mb-1">
+                        <span>💰 Duit Terkumpul</span>
+                        <i class="fa-solid fa-lock text-emerald-500/80" title="Baki selamat dikunci untuk mengelakkan salah taip"></i>
+                    </div>
+                    <!-- Lockable savings display with secure trigger -->
+                    <div class="mt-3 p-2 bg-slate-950/90 rounded-xl border border-emerald-500/20 flex items-center justify-between">
+                        <div class="font-mono text-lg sm:text-xl font-black text-emerald-300">
+                            RM <span id="currentPoolDisplay">1,500</span>
+                        </div>
+                        <button onclick="openManagePoolModal()" class="px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 rounded-lg text-[10px] font-extrabold transition flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-plus-minus"></i> Update
+                        </button>
+                    </div>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-2">Baki selamat dikunci. Klik 'Update' untuk menambah.</p>
+            </div>
+
+            <!-- URGENT TOTAL POPUP BANNER -->
+            <div class="glass-card rounded-2xl p-4 border-l-4 border-rose-500 glow-red flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-xs text-rose-400 font-bold tracking-wide uppercase mb-1">
+                        <span>🚨 URGENT</span>
+                        <span class="px-2 py-0.5 rounded text-[9px] bg-rose-500/20 text-rose-400 font-extrabold">🚨 CRITICAL</span>
+                    </div>
+                    <div class="text-xl sm:text-2xl font-black tracking-tight text-rose-200 mt-2">
+                        RM <span id="totalURGENT">0</span>
+                    </div>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-2">Mesti diselesaikan segera!</p>
+            </div>
+
+            <!-- IMPORTANT TOTAL POPUP BANNER -->
+            <div class="glass-card rounded-2xl p-4 border-l-4 border-amber-500 glow-amber flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-xs text-amber-400 font-bold tracking-wide uppercase mb-1">
+                        <span>⏳ IMPORTANT</span>
+                        <span class="px-2 py-0.5 rounded text-[9px] bg-amber-500/20 text-amber-400 font-extrabold">HIGH</span>
+                    </div>
+                    <div class="text-xl sm:text-2xl font-black tracking-tight text-amber-200 mt-2">
+                        RM <span id="totalIMPORTANT">0</span>
+                    </div>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-2">Perlu perhatian berkala.</p>
+            </div>
+
+            <!-- MINOR TOTAL POPUP BANNER -->
+            <div class="glass-card rounded-2xl p-4 border-l-4 border-blue-500 glow-blue flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-xs text-blue-400 font-bold tracking-wide uppercase mb-1">
+                        <span>☕ MINOR</span>
+                        <span class="px-2 py-0.5 rounded text-[9px] bg-blue-500/20 text-blue-400 font-extrabold">LOW</span>
+                    </div>
+                    <div class="text-xl sm:text-2xl font-black tracking-tight text-blue-200 mt-2">
+                        RM <span id="totalMINOR">0</span>
+                    </div>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-2">Sasaran jangka panjang / emas.</p>
+            </div>
+
+            <!-- OVERALL REMAINING TARGET -->
+            <div class="col-span-2 md:col-span-1 glass-card rounded-2xl p-4 bg-gradient-to-br from-indigo-950/40 to-slate-900 border-l-4 border-indigo-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-xs text-indigo-300 font-bold tracking-wide uppercase mb-1">
+                        <span>🎯 Jumlah Baki</span>
+                        <i class="fa-solid fa-bullseye text-indigo-400"></i>
+                    </div>
+                    <div class="text-xl sm:text-2xl font-black tracking-tight text-indigo-200 mt-2">
+                        RM <span id="totalRemaining">0</span>
+                    </div>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5 mt-2">
+                    <div id="progressPercentBar" class="bg-indigo-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <p class="text-[10px] text-indigo-300 mt-1 flex justify-between">
+                    <span>Selesai: <span id="completedPercentage">0</span>%</span>
+                    <span>Target: RM <span id="totalOriginalTarget">0</span></span>
+                </p>
+            </div>
+
+        </section>
+
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- LEFT PANEL: ITEMS LISTING (8 Cols) -->
+            <section class="lg:col-span-8 space-y-6">
+                
+                <!-- TOP TAB FILTERS & QUICK ADD FORM -->
+                <div class="glass-card rounded-2xl p-4 sm:p-5">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4 mb-4">
+                        <div class="flex flex-wrap gap-1.5">
+                            <button onclick="setFilter('semua')" id="tab-semua" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-indigo-600 text-white">
+                                Semua (<span id="countSemua">0</span>)
+                            </button>
+                            <button onclick="setFilter('URGENT')" id="tab-URGENT" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-slate-800 text-slate-300">
+                                🚨 URGENT (<span id="countURGENT">0</span>)
+                            </button>
+                            <button onclick="setFilter('IMPORTANT')" id="tab-IMPORTANT" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-slate-800 text-slate-300">
+                                ⏳ IMPORTANT (<span id="countIMPORTANT">0</span>)
+                            </button>
+                            <button onclick="setFilter('MINOR')" id="tab-MINOR" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-slate-800 text-slate-300">
+                                ☕ MINOR (<span id="countMINOR">0</span>)
+                            </button>
+                            <button onclick="setFilter('selesai')" id="tab-selesai" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-slate-800 text-slate-300">
+                                ✅ Selesai (<span id="countSelesai">0</span>)
+                            </button>
+                        </div>
+                        <button onclick="toggleAddForm()" class="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/50 text-slate-900">
+                            <i class="fa-solid fa-plus"></i> Tambah Target Baru
+                        </button>
+                    </div>
+
+                    <!-- ADD NEW ITEM INLINE EXPANDABLE FORM -->
+                    <div id="addItemForm" class="hidden bg-slate-950/60 border border-slate-800 rounded-xl p-4 mb-4 transition-all">
+                        <h3 class="text-sm font-extrabold text-teal-400 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-plus"></i> Masukkan Rekod Baru
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                            <div class="sm:col-span-5">
+                                <label class="block text-[10px] font-bold text-slate-400 mb-1">Nama Perkara / Bahagian</label>
+                                <input type="text" id="newItemName" placeholder="Contoh: Tukar Minyak Enjin Yamaha R25" class="w-full bg-slate-900 rounded-lg px-3 py-2 text-xs border border-slate-700 text-slate-100 focus:outline-none focus:border-teal-500" />
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[10px] font-bold text-slate-400 mb-1">Kos Anggaran (RM)</label>
+                                <input type="number" id="newItemCost" placeholder="150" class="w-full bg-slate-900 rounded-lg px-3 py-2 text-xs border border-slate-700 text-slate-100 focus:outline-none focus:border-teal-500" />
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[10px] font-bold text-slate-400 mb-1">Status KeCRITICALan</label>
+                                <select id="newItemUrgency" class="w-full bg-slate-900 rounded-lg px-3 py-2 text-xs border border-slate-700 text-slate-100 focus:outline-none focus:border-teal-500">
+                                    <option value="URGENT">🚨 URGENT</option>
+                                    <option value="IMPORTANT" selected>⏳ IMPORTANT</option>
+                                    <option value="MINOR">☕ MINOR</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-3">
+                                <label class="block text-[10px] font-bold text-slate-400 mb-1">Kumpulan / Kategori</label>
+                                <select id="newItemCategory" class="w-full bg-slate-900 rounded-lg px-3 py-2 text-xs border border-slate-700 text-slate-100 focus:outline-none focus:border-teal-500">
+                                    <option value="Yamaha R25">🏍️ Yamaha R25</option>
+                                    <option value="Vios + Insurance">🚗 Vios + Insurance</option>
+                                    <option value="Solaria">🚗 Solaria</option>
+                                    <option value="Gold Chain">✨ Gold Chain</option>
+                                    <option value="Accident Repair">💥 Accident Repair</option>
+                                    <option value="Lain-lain" selected>📁 Lain-lain</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-2 mt-4">
+                            <button onclick="toggleAddForm()" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200">
+                                Batal
+                            </button>
+                            <button onclick="addNewItemSubmit()" class="px-4 py-1.5 bg-teal-500 hover:bg-teal-600 text-slate-950 rounded-lg text-xs font-bold">
+                                Simpan Sasaran
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SEARCH BAR -->
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fa-solid fa-magnifying-glass text-slate-500 text-xs"></i>
+                        </span>
+                        <input type="text" id="searchInput" oninput="renderItems()" placeholder="Cari perkara (contoh: sprocket, tyre, chain, locket...)" class="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 transition-colors" />
+                    </div>
+                </div>
+
+                <!-- CARDS GRID CONTAINER -->
+                <div id="itemsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Cards will be populated here via JS -->
+                </div>
+
+                <!-- EMPTY STATE -->
+                <div id="emptyState" class="hidden text-center py-12 glass-card rounded-2xl border border-dashed border-slate-800">
+                    <div class="text-4xl text-slate-600 mb-2">🔍</div>
+                    <p class="text-slate-400 text-sm">Tiada barang ditemui mengikut padanan penapis anda.</p>
+                </div>
+
+            </section>
+
+            <!-- RIGHT PANEL: TRANSACTION LOGS & SYNC CONTROLLER (4 Cols) -->
+            <section class="lg:col-span-4 space-y-6">
+
+                <!-- TRANSACTION HISTORY LOG -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                        <h2 class="text-sm font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400 uppercase flex items-center gap-2">
+                            <i class="fa-solid fa-receipt"></i> Rekod Aliran & Transaksi
+                        </h2>
+                        <button onclick="triggerClearTxWithConfirm()" class="text-[10px] text-rose-400 hover:text-rose-300 font-bold">
+                            Kosongkan Log
+                        </button>
+                    </div>
+
+                    <div id="transactionContainer" class="space-y-3 max-h-[350px] overflow-y-auto pr-1">
+                        <!-- Filled by Javascript dynamically -->
+                    </div>
+
+                    <div id="transactionEmpty" class="hidden text-center py-8 text-slate-500 text-xs">
+                        <i class="fa-solid fa-receipt text-lg mb-2 opacity-30 block"></i>
+                        Tiada sebarang transaksi setakat ini.<br>Selesaikan sasaran untuk rekod!
+                    </div>
+                </div>
+
+                <!-- CATEGORIES OVERVIEW PROGRESS -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800">
+                    <h2 class="text-sm font-extrabold text-slate-200 uppercase mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-indigo-400"></i> Ringkasan Kumpulan
+                    </h2>
+                    <div class="space-y-3.5" id="categoryProgressContainer">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <!-- HOW TO USE INFO CARD -->
+                <div class="bg-gradient-to-br from-indigo-950/20 to-slate-900/60 rounded-2xl p-5 border border-indigo-500/10">
+                    <h3 class="text-xs font-extrabold text-indigo-300 uppercase tracking-widest mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-question"></i> Cara Guna Sistem Gempak:
+                    </h3>
+                    <ul class="text-xs text-slate-400 space-y-2 list-none pl-0">
+                        <li class="flex items-start gap-2">
+                            <span class="text-amber-400">1.</span>
+                            <span>Masukkan jumlah <strong>Duit Terkumpul Semasa</strong> yang anda ada di dalam bank/tangan.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-amber-400">2.</span>
+                            <span>Bila modal mencukupi untuk selesaikan sesuatu sasaran, butang <strong>"Selesaikan & Tolak Baki"</strong> akan menyala hijau!</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-amber-400">3.</span>
+                            <span>Satu klik pada butang tersebut akan memotong modal simpanan anda, mengaktifkan letupan bunga api <strong>confetti</strong> 🎉, menukar status item ke <strong>Selesai</strong>, dan merekodkannya dalam resit transaksi aliran tunai!</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-amber-400">4.</span>
+                            <span>Ubah suai keutamaan keCRITICALan pada bila-bila masa menggunakan pilihan dropdown di dalam setiap kad tugasan.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </section>
+        </main>
+
+    </div>
+
+    <!-- FIREBASE CLOUD SYNC CONFIG MODAL -->
+    <div id="firebaseModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+        <div class="bg-slate-900 border border-indigo-500/30 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative">
+            <button onclick="toggleFirebaseModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-100 text-lg">Konfigurasi Cloud Realtime Sync</h3>
+                    <p class="text-xs text-slate-400">Pangkalan data anda telah dihubungkan dalam kod!</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <div class="bg-emerald-950/40 p-3 rounded-lg border border-emerald-500/20">
+                    <p class="text-xs text-emerald-300 leading-relaxed">
+                        <strong>Status Automatik:</strong> Konfigurasi Firebase anda telah dimasukkan terus ke dalam koding pangkalan data web ini. Ia akan bersambung secara automatik setiap kali halaman dimuatkan tanpa perlu memasukkan config lagi!
+                    </p>
+                </div>
+                <div class="text-xs text-slate-400 space-y-1">
+                    <p><strong>Project ID:</strong> relationship-9db5b</p>
+                    <p><strong>Auth Domain:</strong> relationship-9db5b.firebaseapp.com</p>
+                    <p><strong>Storage Bucket:</strong> relationship-9db5b.firebasestorage.app</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <button onclick="toggleFirebaseModal()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-xl text-xs font-bold text-white transition">
+                    Selesai
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM POPUP ALERT MODAL (Replaces window.alert) -->
+    <div id="customAlertModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-5 shadow-2xl text-center">
+            <div id="alertIcon" class="w-14 h-14 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center text-2xl mx-auto mb-4">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 id="alertTitle" class="text-base font-bold text-slate-100 mb-2">Makluman Penting</h3>
+            <p id="alertMessage" class="text-xs text-slate-400 leading-relaxed mb-6">Mesej makluman diletakkan di sini.</p>
+            <button onclick="closeCustomAlert()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-xl text-xs font-bold text-white transition">
+                Faham, Teruskan!
+            </button>
+        </div>
+    </div>
+
+    <!-- CUSTOM CONFIRM MODAL (Replaces window.confirm completely) -->
+    <div id="customConfirmModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-5 shadow-2xl text-center">
+            <div class="w-14 h-14 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center text-2xl mx-auto mb-4">
+                <i class="fa-solid fa-triangle-exclamation animate-bounce"></i>
+            </div>
+            <h3 id="confirmTitle" class="text-base font-bold text-slate-100 mb-2">Pengesahan Diperlukan</h3>
+            <p id="confirmMessage" class="text-xs text-slate-400 leading-relaxed mb-6">Adakah anda pasti untuk meneruskan tindakan ini?</p>
+            <div class="flex gap-3">
+                <button onclick="handleCustomConfirm(false)" class="w-1/2 py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-bold text-slate-300 transition">
+                    Batal
+                </button>
+                <button onclick="handleCustomConfirm(true)" class="w-1/2 py-2 bg-rose-600 hover:bg-rose-500 rounded-xl text-xs font-bold text-white transition">
+                    Ya, Teruskan!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: MANAGE SAVINGS POOL MODAL -->
+    <div id="managePoolModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+        <div class="bg-slate-900 border border-emerald-500/30 w-full max-w-sm rounded-2xl p-6 shadow-2xl relative">
+            <button onclick="closeManagePoolModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white transition cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-100 text-sm">Urus Duit Terkumpul</h3>
+                    <p class="text-[10px] text-slate-400">Pilih untuk tambah simpanan atau set baki baru</p>
+                </div>
+            </div>
+
+            <!-- Current Balance Display in Modal -->
+            <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-850 mb-4 text-center">
+                <span class="text-[10px] text-slate-500 block font-bold uppercase">Simpanan Sedia Ada</span>
+                <span class="text-xl font-black text-emerald-400">RM <span id="modalCurrentPoolDisplay">1,500</span></span>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Option 1: Add Money -->
+                <div class="space-y-1.5">
+                    <label class="block text-[10px] font-extrabold text-emerald-400 uppercase tracking-wider">➕ Tambah Simpanan Baru (Berubah Tambah)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">RM</span>
+                        <input type="number" id="addMoneyInput" placeholder="Masukkan amaun tambahan (cth: 500)" class="w-full bg-slate-950 rounded-lg pl-9 pr-3 py-2 text-xs border border-slate-800 text-slate-100 focus:outline-none focus:border-emerald-500" />
+                    </div>
+                    <button onclick="submitAddMoney()" class="w-full py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-emerald-500/10">
+                        <i class="fa-solid fa-plus-circle"></i> Tambah Ke Simpanan
+                    </button>
+                </div>
+
+                <div class="relative flex py-1 items-center">
+                    <div class="flex-grow border-t border-slate-850"></div>
+                    <span class="flex-shrink mx-3 text-[10px] text-slate-500 font-bold uppercase">Atau Tukar Terus</span>
+                    <div class="flex-grow border-t border-slate-850"></div>
+                </div>
+
+                <!-- Option 2: Overwrite Balance -->
+                <div class="space-y-1.5">
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">✏️ Tukar Amaun Simpanan (Set Semula)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2.5 text-slate-500 text-xs font-bold">RM</span>
+                        <input type="number" id="overrideMoneyInput" placeholder="Sila isi baki alternatif baru" class="w-full bg-slate-950 rounded-lg pl-9 pr-3 py-2 text-xs border border-slate-800 text-slate-300 focus:outline-none focus:border-slate-500" />
+                    </div>
+                    <button onclick="submitOverrideMoney()" class="w-full py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-pen-to-square"></i> Tukar Jumlah Kasar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Realtime Modules Import (Ver 11.6.1 for highest stability)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ========================================================================
+        // 🔴 SETUP FIREBASE CONFIGURATION (INTEGRATED & AUTO-CONNECTS) 🔴
+        // ========================================================================
+        const HARDCODED_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyDcVwkPR9ps4iqfo2mAkvc7AQNkyXloK0Q",
+            authDomain: "relationship-9db5b.firebaseapp.com",
+            projectId: "relationship-9db5b",
+            storageBucket: "relationship-9db5b.firebasestorage.app",
+            messagingSenderId: "930184334118",
+            appId: "1:930184334118:web:c83e86222e9e0c8359cfe7",
+            measurementId: "G-FMGXK7WB4R"
+        }; 
+        // ========================================================================
+
+        // Complete 50 motivational quotes (Malay & English)
+        const HUSTLE_QUOTES = [
+            { me: "Sikit-sikit, lama-lama motor gempak semula! Jangan mengalah.", en: "Bit by bit, eventually the bike is awesome again! Do not give up." },
+            { me: "Setiap sen yang disimpan hari ini adalah kunci kebebasan hari esok.", en: "Every cent saved today is the key to tomorrow's freedom." },
+            { me: "Drive shaft, tayar, insuran... Semua ini ujian, tapi ko lagi kuat dari segala ujian besi!", en: "Drive shaft, tires, insurance... These are tests, but you are stronger than any iron tests!" },
+            { me: "Jangan tengok jumlah besar tu sampai pening. Selesaikan yang paling 'URGENT' dulu, satu-satu!", en: "Don't look at the big total until you're dizzy. Resolve the most 'URGENT' first, one by one!" },
+            { me: "Yamaha R25 ko sedang menanti sentuhan magis ko. Cari duit, bagi dia garang semula!", en: "Your Yamaha R25 is waiting for your magic touch. Grind, make it fierce again!" },
+            { me: "Bila rasa nak boros, ingat balik list repair ni. Simpan demi keselamatan perjalanan.", en: "When you feel like spending extra, look back at this repair list. Save for a safe journey." },
+            { me: "Hustle sekarang, LOW kemudian. Biar penat janji tiada bebanan berlarutan.", en: "Hustle now, relax later. Better tired than carrying a prolonged burden." },
+            { me: "Emas rantaian impian pun boleh dicapai kalau fokus ko tajam macam pisau cukur!", en: "Even your dream gold chain can be achieved if your focus is as sharp as a razor!" },
+            { me: "Disiplin kewangan bukan menyekat kebebasan ko, tapi menjamin masa depan ko.", en: "Financial discipline does not limit your freedom, it guarantees your future." },
+            { me: "Biar motor standard dulu, janji tak berhutang keliling pinggang untuk gaya.", en: "Let the bike be standard for now, as long as you're not in debt just for style." },
+            { me: "Kerja keras takkan pernah khianat hasil. Teruskan usaha mencari rezeki halal!", en: "Hard work never betrays the outcome. Keep pushing for halal sustenance!" },
+            { me: "Duit boleh dicari semula, tapi ketenangan minda bila semua repair selesai adalah kepuasan teragung.", en: "Money can be earned back, but peace of mind when all repairs are settled is supreme." },
+            { me: "Fokus pada apa yang penting. Solaria, Vios, R25... Kenderaan ko, tanggungjawab ko.", en: "Focus on what matters. Solaria, Vios, R25... Your vehicles, your responsibility." },
+            { me: "Setiap kali ko menolak nafsu boros, ko sedang menyelamatkan drive shaft Vios ko!", en: "Every time you resist spending, you are saving your Vios's drive shaft!" },
+            { me: "Ubah mindset: Menyimpan itu bukan sekadar hobi, ia adalah senjata bertahan hidup.", en: "Change your mindset: Saving is not just a hobby, it is a survival weapon." },
+            { me: "Jangan bandingkan progress ko dengan orang lain. Fokus setelkan hutang dan repair sendiri dulu.", en: "Do not compare your progress with others. Focus on settling your own debts and repairs first." },
+            { me: "Amin Redang trip nak RM700. Setelkan segera! Kepercayaan kawan adalah maruah kita.", en: "Amin needs RM700 for the Redang trip. Settle it soon! A friend's trust is our honor." },
+            { me: "Beli barang berharga dengan tunai, bukan bayaran ansuran yang mencekik darah.", en: "Buy valuable things with cash, not blood-sucking installments." },
+            { me: "Satu demi satu item merah bertukar hijau. Itu namanya kemenangan kecil tapi bermakna!", en: "One by one, red items turn green. That is called a small but meaningful victory!" },
+            { me: "Rezeki tak pernah salah alamat. Tugas ko hanyalah teruskan usaha dan doa.", en: "Sustenance never goes to the wrong address. Your job is just to keep trying and praying." },
+            { me: "Rantai emas, locket emas... Pelaburan yang indah bila ko dah bebas bebanan repair.", en: "Gold chain, gold locket... A beautiful investment once you are free of repair burdens." },
+            { me: "Apabila ko rasa nak berhenti, ingat kenapa ko mulakan penjejak ini.", en: "When you feel like stopping, remember why you started this tracker." },
+            { me: "Biar lambat asal selamat, biar simpan sikit asal berkat.", en: "Better slow as long as safe, better save small as long as blessed." },
+            { me: "Hari ini ko bersusah payah, esok lusa ko ride Yamaha R25 dengan senyuman lebar!", en: "Today you struggle, tomorrow you ride your Yamaha R25 with a broad smile!" },
+            { me: "Urus kewangan dengan bijak. Jangan biarkan kerosakan kecil jadi parah hingga bocor dompet.", en: "Manage finances wisely. Don't let minor issues become severe and drain your wallet." },
+            { me: "Duit terkumpul makin naik, beban makin kurang. Teruskan momentum gempak ini!", en: "Accumulated money is rising, burdens are decreasing. Keep this awesome momentum going!" },
+            { me: "Hustle harder, save smarter. Masa depan ko cerah bila kenderaan semua tiada masalah.", en: "Hustle harder, save smarter. Your future is bright when your vehicles are trouble-free." },
+            { me: "Jangan takut dengan kos tinggi, takutlah pada kemalasan diri sendiri.", en: "Do not fear high costs, fear your own laziness." },
+            { me: "Beringat sebelum terkena. Setel tayar dan brek demi nyawa ko sendiri di jalan raya.", en: "Be prepared. Settle tires and brakes for your own life on the road." },
+            { me: "Duit tak jatuh dari langit. Ia datang dari usaha gigih ko setiap hari siang dan malam.", en: "Money does not fall from the sky. It comes from your hard work day and night." },
+            { me: "Fokus. Konsisten. Berjaya. Tiga perkataan ini akan ubah kedudukan kewangan ko.", en: "Focus on constancy. Success. These three words will change your financial status." },
+            { me: "Bina simpanan umpama membina empangan. Sikit-sikit air, akhirnya jadi tasik luas.", en: "Build savings like building a dam. Little by little, it eventually becomes a vast lake." },
+            { me: "Tiada siapa boleh ubah nasib ko melainkan ko sendiri yang bangun dan bertindak!", en: "Nobody can change your fate except yourself getting up and taking action!" },
+            { me: "Fokus pada penyelesaian, bukan masalah. Ada senarai, ada jalan keluar.", en: "Focus on solutions, not the problem. Where there is a list, there is a way out." },
+            { me: "Simpan RM10 sehari pun dah cukup baik daripada belanja tak tentu arah.", en: "Saving RM10 a day is far better than spending aimlessly." },
+            { me: "Motosikal gempak bermula dari maintenance yang dijaga dengan penuh kasih sayang.", en: "An awesome motorcycle starts with maintenance done with absolute care." },
+            { me: "Duit yang disimpan adalah kuasa ko untuk berkata 'TIDAK' kepada hutang ribat.", en: "Money saved is your power to say 'NO' to high-interest debts." },
+            { me: "Tenang, rancang, laksana. Jangan terburu-buru hingga rosak pelan simpanan.", en: "Calm, plan, execute. Do not rush and ruin your savings plan." },
+            { me: "Kejayaan adalah himpunan usaha kecil yang diulang setiap hari.", en: "Success is the sum of small efforts, repeated day in and day out." },
+            { me: "Setiap kali ko tick 'Selesai', ko sedang membuang satu beban dari bahu ko.", en: "Every time you tick 'Selesai', you are lifting a burden off your shoulders." },
+            { me: "Insuren Vios RM1700 adalah pelindung ketenangan minda ko. Sediakan awal-awal!", en: "Vios insurance of RM1700 protects your peace of mind. Prepare for it early!" },
+            { me: "Biar dompet tebal dengan duit simpanan, bukan kad hutang berselerak.", en: "Let your wallet be thick with savings, not cluttered with credit cards." },
+            { me: "Kurangkan sembang kencang, lebihkan menyimpan. Biar hasil berbicara.", en: "Less talk, more action. Let your results speak for themselves." },
+            { me: "Setiap langkah kecil membawa ko lebih dekat kepada matlamat rantaian emas idaman.", en: "Every small step brings you closer to your dream gold chain target." },
+            { me: "Jangan mengeluh tentang kos hidup, sebaliknya tingkatkan nilai kemahiran ko.", en: "Do not complain about the cost of living; instead, increase the value of your skills." },
+            { me: "Jaga solat, jaga hubungan dengan manusia, insyaAllah rezeki mengalir mencurah-curah.", en: "Maintain prayers, protect relations with people, God willing sustenance flows abundantly." },
+            { me: "Motor yang diservis tepat waktu akan bertahan lama dan jimatkan ribuan ringgit ko.", en: "A bike serviced on time will last long and save you thousands of ringgits." },
+            { me: "Hari ini ko catat baki, esok lusa ko bebas segala beban dan sedia tersenyum lebar!", en: "Today you track balances, tomorrow you are free of all burdens and ready to smile wide!" },
+            { me: "Jangan bertangguh dalam membuat kebaikan, begitu juga dalam menyimpan modal masa depan.", en: "Do not delay in doing good, nor in saving capital for your future." },
+            { me: "Kepuasan terbaik adalah memandu kenderaan yang diservis sepenuhnya tanpa sebarang masalah tersembunyi.", en: "The best satisfaction is driving a fully serviced vehicle with absolutely no hidden issues." }
+        ];
+
+        // Seed tracker items mapped directly from User Images
+        const SEED_TRACKER_ITEMS = [
+            { id: "gold_chain_1", name: "Gold Chain (Rantai)", cost: 1600, urgency: "MINOR", category: "Gold Chain", completed: false },
+            { id: "gold_chain_2", name: "Locket (Loket Emas)", cost: 850, urgency: "MINOR", category: "Gold Chain", completed: false },
+            { id: "accident_1", name: "Accident Repair Redang (Bayar Amin)", cost: 700, urgency: "URGENT", category: "Accident Repair", completed: false },
+            { id: "vios_1", name: "Vios Mileage 98,000 KM Service", cost: 200, urgency: "IMPORTANT", category: "Vios + Insurance", completed: false },
+            { id: "vios_2", name: "Vios Service for 100,000 KM", cost: 900, urgency: "IMPORTANT", category: "Vios + Insurance", completed: false },
+            { id: "vios_3", name: "Vios Drive Shaft Repair", cost: 500, urgency: "URGENT", category: "Vios + Insurance", completed: false },
+            { id: "vios_4", name: "Vios Aircond Restoration", cost: 300, urgency: "IMPORTANT", category: "Vios + Insurance", completed: false },
+            { id: "vios_5", name: "Vios Tayar (Tires replacement)", cost: 750, urgency: "URGENT", category: "Vios + Insurance", completed: false },
+            { id: "vios_6", name: "Vios Battery Holder replacement", cost: 150, urgency: "IMPORTANT", category: "Vios + Insurance", completed: false },
+            { id: "vios_7", name: "Vios Car Insurance Renewal", cost: 1700, urgency: "URGENT", category: "Vios + Insurance", completed: false },
+            { id: "solaria_1", name: "Solaria Tyres Replacement", cost: 100, urgency: "URGENT", category: "Solaria", completed: false },
+            { id: "solaria_2", name: "Solaria Service (100km)", cost: 100, urgency: "IMPORTANT", category: "Solaria", completed: false },
+            { id: "r25_1", name: "Engine Oil + Oil Filter Service (R25)", cost: 160, urgency: "IMPORTANT", category: "Yamaha R25", completed: false },
+            { id: "r25_2", name: "Spark Plug replacement (R25)", cost: 130, urgency: "IMPORTANT", category: "Yamaha R25", completed: false },
+            { id: "r25_3", name: "Air Filter replacement (R25)", cost: 105, urgency: "IMPORTANT", category: "Yamaha R25", completed: false },
+            { id: "r25_4", name: "Coolant Replacement (R25)", cost: 70, urgency: "IMPORTANT", category: "Yamaha R25", completed: false },
+            { id: "r25_5", name: "Brake Fluid Service (R25)", cost: 70, urgency: "IMPORTANT", category: "Yamaha R25", completed: false },
+            { id: "r25_6", name: "Throttle Body Service (R25)", cost: 140, urgency: "IMPORTANT", category: "Yamaha R25", completed: false },
+            { id: "r25_7", name: "New Battery (R25)", cost: 265, urgency: "URGENT", category: "Yamaha R25", completed: false },
+            { id: "r25_8", name: "Tires Set replacement (R25)", cost: 700, urgency: "URGENT", category: "Yamaha R25", completed: false },
+            { id: "r25_9", name: "Premium Chain & Sprocket Set (R25)", cost: 375, urgency: "URGENT", category: "Yamaha R25", completed: false },
+            { id: "r25_10", name: "Brake Pads Set (R25)", cost: 250, urgency: "URGENT", category: "Yamaha R25", completed: false },
+            { id: "r25_11", name: "Fork Oil & Fork Service (R25)", cost: 350, urgency: "IMPORTANT", category: "Yamaha R25", completed: false },
+            { id: "r25_12", name: "Wheel Bearing Replacement (R25)", cost: 165, urgency: "IMPORTANT", category: "Yamaha R25", completed: false },
+            { id: "r25_13", name: "Steering Cone Bearing (R25)", cost: 250, urgency: "IMPORTANT", category: "Yamaha R25", completed: false },
+            { id: "r25_14", name: "Valve Clearance Adjustment (R25)", cost: 350, urgency: "IMPORTANT", category: "Yamaha R25", completed: false }
+        ];
+
+        let state = {
+            items: [],
+            transactions: [],
+            currentPool: 1500,
+            activeFilter: 'semua',
+            isFirebaseConnected: false
+        };
+
+        // Firebase reference holders
+        let db = null;
+        let auth = null;
+        let app = null;
+        let unsubscribeItems = null;
+        let unsubscribeSettings = null;
+
+        // Custom Confirm Callback state
+        let customConfirmCallback = null;
+
+        const appId = 'default-hustle-tracker';
+
+        // Load state initially
+        function loadState() {
+            const savedItems = localStorage.getItem('hustle_items');
+            const savedTransactions = localStorage.getItem('hustle_transactions');
+            const savedPool = localStorage.getItem('hustle_pool');
+
+            if (savedItems) {
+                state.items = JSON.parse(savedItems);
+            } else {
+                state.items = [...SEED_TRACKER_ITEMS];
+                localStorage.setItem('hustle_items', JSON.stringify(state.items));
+            }
+
+            if (savedTransactions) {
+                state.transactions = JSON.parse(savedTransactions);
+            } else {
+                state.transactions = [];
+            }
+
+            if (savedPool) {
+                state.currentPool = Number(savedPool);
+            } else {
+                state.currentPool = 1500;
+            }
+
+            updatePoolUI();
+        }
+
+        // Save local backup state
+        function saveStateLocally() {
+            localStorage.setItem('hustle_items', JSON.stringify(state.items));
+            localStorage.setItem('hustle_transactions', JSON.stringify(state.transactions));
+            localStorage.setItem('hustle_pool', state.currentPool.toString());
+        }
+
+        // Initialize Firebase Sync automatically using HARDCODED configuration
+        async function initializeFirebaseSync() {
+            const config = HARDCODED_FIREBASE_CONFIG;
+
+            if (!config || !config.apiKey) {
+                console.log("Firebase config not fully set. Running in local storage mode.");
+                updateSyncBadge(false);
+                return;
+            }
+
+            try {
+                // Initialize Firebase SDK
+                app = initializeApp(config);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // RULE 3 - Call signInAnonymously first, await it
+                const userCredential = await signInAnonymously(auth);
+
+                if (userCredential && auth.currentUser) {
+                    state.isFirebaseConnected = true;
+                    updateSyncBadge(true);
+                    
+                    // Setup Realtime Sync listeners with RULE 1 strict paths (even number of segments)
+                    setupFirestoreListeners();
+                }
+            } catch (err) {
+                console.error("Firebase connection / auth failed:", err);
+                
+                let messageSuffix = ". Mod simpanan tempatan diaktifkan.";
+                if (err.code === 'auth/configuration-not-found') {
+                    messageSuffix = ". Sila aktifkan 'Anonymous Sign-In' di Firebase Console -> Authentication -> Sign-in Method.";
+                }
+                
+                showCustomAlert("Ralat Sambungan Cloud", `Sistem gagal menyambung ke Cloud Sync: ${err.message}${messageSuffix}`, "error");
+                state.isFirebaseConnected = false;
+                updateSyncBadge(false);
+            }
+        }
+
+        // Realtime sync listening to fixed Firestore path configurations (Strict Rule 1)
+        function setupFirestoreListeners() {
+            if (!db || !auth.currentUser) return;
+
+            if (unsubscribeItems) unsubscribeItems();
+            if (unsubscribeSettings) unsubscribeSettings();
+
+            // RULE 1: Standardized Document references (EVEN number of segments)
+            // Path: /artifacts/{appId}/public/data/{collectionName}/{documentId}
+            const itemsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'tracker_items', 'state');
+            const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'tracker_settings', 'state');
+
+            // Set up real-time listener for tracker items
+            unsubscribeItems = onSnapshot(itemsDocRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    if (data && data.items) {
+                        state.items = data.items;
+                        saveStateLocally();
+                        renderItems();
+                        recalculateTotals();
+                    }
+                } else {
+                    // Initialize DB document if not yet populated
+                    setDoc(itemsDocRef, { items: state.items }).catch(err => console.error("Error seeding initial cloud items:", err));
+                }
+            }, (error) => {
+                console.error("Firestore Items listener error:", error);
+            });
+
+            // Set up real-time listener for settings & transactions
+            unsubscribeSettings = onSnapshot(settingsDocRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    if (data) {
+                        if (typeof data.currentPool !== 'undefined') {
+                            state.currentPool = Number(data.currentPool);
+                            updatePoolUI();
+                        }
+                        if (data.transactions) {
+                            state.transactions = data.transactions;
+                        }
+                        saveStateLocally();
+                        renderTransactions();
+                        renderItems();
+                        recalculateTotals();
+                    }
+                } else {
+                    setDoc(settingsDocRef, { 
+                        currentPool: state.currentPool, 
+                        transactions: state.transactions 
+                    }).catch(err => console.error("Error seeding initial cloud settings:", err));
+                }
+            }, (error) => {
+                console.error("Firestore Settings listener error:", error);
+            });
+        }
+
+        // Send changes to Cloud database (Strict Rule 1 paths)
+        async function pushItemsToCloud() {
+            if (!state.isFirebaseConnected || !db || !auth.currentUser) return;
+            try {
+                const itemsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'tracker_items', 'state');
+                await setDoc(itemsDocRef, { items: state.items });
+            } catch (err) {
+                console.error("Failed to sync items with Firebase Cloud:", err);
+            }
+        }
+
+        async function pushSettingsToCloud() {
+            if (!state.isFirebaseConnected || !db || !auth.currentUser) return;
+            try {
+                const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'tracker_settings', 'state');
+                await setDoc(settingsDocRef, { 
+                    currentPool: state.currentPool, 
+                    transactions: state.transactions 
+                });
+            } catch (err) {
+                console.error("Failed to sync settings with Firebase Cloud:", err);
+            }
+        }
+
+        function updateSyncBadge(isConnected) {
+            const badge = document.getElementById('syncBadge');
+            if (isConnected) {
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1";
+                badge.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Cloud Connected`;
+            } else {
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-500/10 text-slate-400 border border-slate-500/20 flex items-center gap-1";
+                badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Local Storage Only`;
+            }
+        }
+
+        // Overall Dashboard Totals Recalculations (Rule 2: Fetching all in memory and summing up)
+        window.recalculateTotals = function() {
+            let totalURGENT = 0;
+            let totalIMPORTANT = 0;
+            let totalMINOR = 0;
+            let totalOriginalTarget = 0;
+            let completedCount = 0;
+
+            state.items.forEach(item => {
+                const itemCost = Number(item.cost) || 0;
+                totalOriginalTarget += itemCost;
+                
+                if (item.completed) {
+                    completedCount++;
+                } else {
+                    if (item.urgency === 'URGENT') totalURGENT += itemCost;
+                    else if (item.urgency === 'IMPORTANT') totalIMPORTANT += itemCost;
+                    else if (item.urgency === 'MINOR') totalMINOR += itemCost;
+                }
+            });
+
+            const totalRemaining = totalURGENT + totalIMPORTANT + totalMINOR;
+
+            // Update top display metric badges
+            document.getElementById('totalURGENT').innerText = totalURGENT.toLocaleString();
+            document.getElementById('totalIMPORTANT').innerText = totalIMPORTANT.toLocaleString();
+            document.getElementById('totalMINOR').innerText = totalMINOR.toLocaleString();
+            document.getElementById('totalRemaining').innerText = totalRemaining.toLocaleString();
+            document.getElementById('totalOriginalTarget').innerText = totalOriginalTarget.toLocaleString();
+
+            const percentage = totalOriginalTarget > 0 ? Math.round(((totalOriginalTarget - totalRemaining) / totalOriginalTarget) * 100) : 0;
+            document.getElementById('completedPercentage').innerText = percentage;
+            document.getElementById('progressPercentBar').style.width = `${percentage}%`;
+
+            // Filter button counter tags
+            document.getElementById('countSemua').innerText = state.items.length;
+            document.getElementById('countURGENT').innerText = state.items.filter(i => i.urgency === 'URGENT' && !i.completed).length;
+            document.getElementById('countIMPORTANT').innerText = state.items.filter(i => i.urgency === 'IMPORTANT' && !i.completed).length;
+            document.getElementById('countMINOR').innerText = state.items.filter(i => i.urgency === 'MINOR' && !i.completed).length;
+            document.getElementById('countSelesai').innerText = state.items.filter(i => i.completed).length;
+
+            renderCategoryOverview(totalOriginalTarget);
+        }
+
+        // Rendering summary of progress categories
+        function renderCategoryOverview() {
+            const container = document.getElementById('categoryProgressContainer');
+            if (!container) return;
+
+            const categorySums = {};
+            state.items.forEach(item => {
+                const cat = item.category || 'Lain-lain';
+                if (!categorySums[cat]) {
+                    categorySums[cat] = { total: 0, completed: 0 };
+                }
+                categorySums[cat].total += Number(item.cost) || 0;
+                if (item.completed) {
+                    categorySums[cat].completed += Number(item.cost) || 0;
+                }
+            });
+
+            let html = '';
+            for (const [name, stats] of Object.entries(categorySums)) {
+                const percent = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
+                const outstanding = stats.total - stats.completed;
+
+                let icon = '📁';
+                if (name.includes('Yamaha')) icon = '🏍️';
+                else if (name.includes('Vios')) icon = '🚗';
+                else if (name.includes('Solaria')) icon = '🚗';
+                else if (name.includes('Gold')) icon = '✨';
+                else if (name.includes('Accident')) icon = '💥';
+
+                html += `
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-semibold text-slate-300 flex items-center gap-1.5">${icon} ${name}</span>
+                            <span class="text-slate-400 font-mono">RM ${outstanding.toLocaleString()} left</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-full bg-slate-800 rounded-full h-1.5">
+                                <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-1.5 rounded-full transition-all" style="width: ${percent}%"></div>
+                            </div>
+                            <span class="text-[10px] text-teal-400 font-extrabold w-8 text-right">${percent}%</span>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        // Re-render item display cards
+        window.renderItems = function() {
+            const grid = document.getElementById('itemsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+
+            grid.innerHTML = '';
+            
+            const filtered = state.items.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchVal) || 
+                                      (item.category && item.category.toLowerCase().includes(searchVal));
+                
+                if (!matchesSearch) return false;
+
+                if (state.activeFilter === 'semua') return true;
+                if (state.activeFilter === 'URGENT') return item.urgency === 'URGENT' && !item.completed;
+                if (state.activeFilter === 'IMPORTANT') return item.urgency === 'IMPORTANT' && !item.completed;
+                if (state.activeFilter === 'MINOR') return item.urgency === 'MINOR' && !item.completed;
+                if (state.activeFilter === 'selesai') return item.completed;
+                
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                let borderTheme = 'border-slate-800 hover:border-slate-700';
+                let indicatorBadge = '';
+                
+                if (item.completed) {
+                    borderTheme = 'border-emerald-500/20 bg-emerald-950/10 opacity-75';
+                    indicatorBadge = `<span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> SELESAI</span>`;
+                } else if (item.urgency === 'URGENT') {
+                    borderTheme = 'border-rose-500/30 hover:border-rose-500/50 bg-rose-950/10';
+                    indicatorBadge = `<span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/30">🚨 URGENT</span>`;
+                } else if (item.urgency === 'IMPORTANT') {
+                    borderTheme = 'border-amber-500/30 hover:border-amber-500/50 bg-amber-950/10';
+                    indicatorBadge = `<span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30">⏳ IMPORTANT</span>`;
+                } else {
+                    borderTheme = 'border-blue-500/30 hover:border-blue-500/50 bg-blue-950/10';
+                    indicatorBadge = `<span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-blue-500/20 text-blue-400 border border-blue-500/30">☕ MINOR</span>`;
+                }
+
+                const canAfford = state.currentPool >= item.cost && !item.completed;
+                const payButtonClass = canAfford 
+                    ? "bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-extrabold shadow-lg shadow-emerald-500/20 cursor-pointer" 
+                    : "bg-slate-800 text-slate-500 cursor-not-allowed font-medium";
+
+                card.className = `glass-card ${borderTheme} rounded-2xl p-4 sm:p-5 transition-all relative flex flex-col justify-between h-full`;
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <span class="text-[10px] tracking-widest font-extrabold uppercase text-slate-400 flex items-center gap-1">
+                                <i class="fa-solid fa-folder text-indigo-400"></i> ${item.category || 'Lain-Lain'}
+                            </span>
+                            <div class="flex items-center gap-1.5">
+                                ${indicatorBadge}
+                                ${!item.completed ? `
+                                    <button onclick="triggerDeleteItemWithConfirm('${item.id}')" class="text-slate-500 hover:text-rose-400 transition cursor-pointer" title="Padam item">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-100 mb-3 leading-snug line-clamp-2">
+                            ${item.name}
+                        </h3>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-t border-slate-800 pt-3">
+                            <div>
+                                <span class="text-[10px] text-slate-400 block font-semibold uppercase">Kos Diperlukan</span>
+                                <span class="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-slate-300">RM ${item.cost.toLocaleString()}</span>
+                            </div>
+                            ${!item.completed ? `
+                                <div class="text-right">
+                                    <span class="text-[10px] text-slate-400 block font-semibold uppercase">Ubah Priority</span>
+                                    <select onchange="updateUrgency('${item.id}', this.value)" class="bg-slate-950 border border-slate-700/60 text-[11px] font-bold rounded-lg px-2 py-1 text-slate-200 focus:outline-none cursor-pointer mt-0.5">
+                                        <option value="URGENT" ${item.urgency === 'URGENT' ? 'selected' : ''}>🚨 URGENT</option>
+                                        <option value="IMPORTANT" ${item.urgency === 'IMPORTANT' ? 'selected' : ''}>⏳ IMPORTANT</option>
+                                        <option value="MINOR" ${item.urgency === 'MINOR' ? 'selected' : ''}>☕ MINOR</option>
+                                    </select>
+                                </div>
+                            ` : `
+                                <div class="text-right">
+                                    <span class="text-[10px] text-slate-500 block font-semibold uppercase">Status Terkini</span>
+                                    <span class="text-xs font-bold text-emerald-400">✅ Settle</span>
+                                </div>
+                            `}
+                        </div>
+
+                        ${!item.completed ? `
+                            <button onclick="payOffItem('${item.id}', ${item.cost})" class="w-full py-2 px-3 rounded-xl text-xs transition flex items-center justify-center gap-2 ${payButtonClass}">
+                                <i class="fa-solid fa-check"></i> Selesaikan & Tolak Baki
+                            </button>
+                        ` : `
+                            <button onclick="undoCompletedItem('${item.id}')" class="w-full py-2 px-3 bg-slate-850 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-rotate-left"></i> Batal Selesai
+                            </button>
+                        `}
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Deduct baki automatically, trigger fireworks
+        window.payOffItem = async function(id, cost) {
+            if (state.currentPool < cost) {
+                const deficit = cost - state.currentPool;
+                showCustomAlert(
+                    "Modal Tidak Mencukupi! ⚠️", 
+                    `Duit terkumpul anda (RM ${state.currentPool.toLocaleString()}) masih kurang RM ${deficit.toLocaleString()} untuk selesaikan perkara ini. Sila tambah modal simpanan dahulu! 💪`,
+                    "warning"
+                );
+                return;
+            }
+
+            state.currentPool -= cost;
+            updatePoolUI();
+
+            const itemIndex = state.items.findIndex(item => item.id === id);
+            if (itemIndex !== -1) {
+                state.items[itemIndex].completed = true;
+                const itemName = state.items[itemIndex].name;
+
+                const transaction = {
+                    id: 'tx_' + Date.now(),
+                    itemName: itemName,
+                    cost: cost,
+                    date: new Date().toLocaleDateString('ms-MY', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                };
+
+                state.transactions.unshift(transaction);
+
+                // Beautiful Confetti Explosion
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#34d399', '#10b981', '#60a5fa', '#f59e0b', '#fb7185']
+                });
+
+                saveStateLocally();
+
+                if (state.isFirebaseConnected) {
+                    await pushItemsToCloud();
+                    await pushSettingsToCloud();
+                } else {
+                    renderItems();
+                    renderTransactions();
+                    recalculateTotals();
+                }
+            }
+        }
+
+        // Revert a completed item back to the tracker list
+        window.undoCompletedItem = async function(id) {
+            const itemIndex = state.items.findIndex(item => item.id === id);
+            if (itemIndex !== -1) {
+                const item = state.items[itemIndex];
+                item.completed = false;
+                
+                state.currentPool += item.cost;
+                updatePoolUI();
+
+                state.transactions = state.transactions.filter(tx => tx.itemName !== item.name);
+
+                saveStateLocally();
+
+                if (state.isFirebaseConnected) {
+                    await pushItemsToCloud();
+                    await pushSettingsToCloud();
+                } else {
+                    renderItems();
+                    renderTransactions();
+                    recalculateTotals();
+                }
+            }
+        }
+
+        // Inline urgency changes
+        window.updateUrgency = async function(id, newUrgency) {
+            const itemIndex = state.items.findIndex(item => item.id === id);
+            if (itemIndex !== -1) {
+                state.items[itemIndex].urgency = newUrgency;
+                saveStateLocally();
+
+                if (state.isFirebaseConnected) {
+                    await pushItemsToCloud();
+                } else {
+                    renderItems();
+                    recalculateTotals();
+                }
+            }
+        }
+
+        window.openManagePoolModal = function() {
+            document.getElementById('addMoneyInput').value = '';
+            document.getElementById('overrideMoneyInput').value = '';
+            document.getElementById('modalCurrentPoolDisplay').innerText = state.currentPool.toLocaleString();
+            
+            const modal = document.getElementById('managePoolModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        window.closeManagePoolModal = function() {
+            const modal = document.getElementById('managePoolModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        window.submitAddMoney = async function() {
+            const addVal = Number(document.getElementById('addMoneyInput').value);
+            if (isNaN(addVal) || addVal <= 0) {
+                showCustomAlert("Nilai Tidak Sah ⚠️", "Sila isi nilai angka simpanan tambahan yang betul.", "warning");
+                return;
+            }
+
+            state.currentPool += addVal;
+            
+            // Record addition in transaction receipts
+            const transaction = {
+                id: 'tx_add_' + Date.now(),
+                itemName: `➕ Tambah Simpanan (Masuk Modal)`,
+                cost: -addVal, // negative cost represents incoming fund in log rendering
+                date: new Date().toLocaleDateString('ms-MY', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            };
+
+            state.transactions.unshift(transaction);
+            saveStateLocally();
+            updatePoolUI();
+            closeManagePoolModal();
+
+            if (state.isFirebaseConnected) {
+                await pushSettingsToCloud();
+            } else {
+                renderItems();
+                renderTransactions();
+                recalculateTotals();
+            }
+
+            // Celebrate saving money!
+            confetti({
+                particleCount: 60,
+                spread: 45,
+                origin: { y: 0.75 }
+            });
+
+            showCustomAlert("Simpanan Ditambah! 🎉", `RM ${addVal.toLocaleString()} berjaya ditambahkan ke dalam baki terkumpul semasa anda.`, "success");
+        }
+
+        window.submitOverrideMoney = async function() {
+            const overrideVal = Number(document.getElementById('overrideMoneyInput').value);
+            if (isNaN(overrideVal) || overrideVal < 0) {
+                showCustomAlert("Nilai Tidak Sah ⚠️", "Sila masukkan nilai baki kasar simpanan yang sah.", "warning");
+                return;
+            }
+
+            showCustomConfirm(
+                "Ganti Baki Simpanan?",
+                `Adakah anda pasti mahu menetapkan secara terus jumlah baki simpanan anda kepada RM ${overrideVal.toLocaleString()}?`,
+                async function() {
+                    const diff = overrideVal - state.currentPool;
+                    state.currentPool = overrideVal;
+
+                    // Log manual adjustment
+                    const transaction = {
+                        id: 'tx_adj_' + Date.now(),
+                        itemName: `⚙️ Pelarasan Baki (Set Manual)`,
+                        cost: -diff,
+                        date: new Date().toLocaleDateString('ms-MY', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })
+                    };
+
+                    state.transactions.unshift(transaction);
+                    saveStateLocally();
+                    updatePoolUI();
+                    closeManagePoolModal();
+
+                    if (state.isFirebaseConnected) {
+                        await pushSettingsToCloud();
+                    } else {
+                        renderItems();
+                        renderTransactions();
+                        recalculateTotals();
+                    }
+                    showCustomAlert("Baki Dikemaskini!", `Jumlah baki kasar telah ditukar kepada RM ${overrideVal.toLocaleString()}!`, "success");
+                }
+            );
+        }
+
+        function updatePoolUI() {
+            const displayEl = document.getElementById('currentPoolDisplay');
+            const modalDisplayEl = document.getElementById('modalCurrentPoolDisplay');
+            if (displayEl) displayEl.innerText = state.currentPool.toLocaleString();
+            if (modalDisplayEl) modalDisplayEl.innerText = state.currentPool.toLocaleString();
+        }
+
+        // Transaction Logs rendering
+        function renderTransactions() {
+            const container = document.getElementById('transactionContainer');
+            const emptyEl = document.getElementById('transactionEmpty');
+
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (state.transactions.length === 0) {
+                emptyEl.classList.remove('hidden');
+                container.classList.add('hidden');
+                return;
+            }
+
+            emptyEl.classList.add('hidden');
+            container.classList.remove('hidden');
+
+            state.transactions.forEach(tx => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 flex items-start justify-between gap-3 text-xs";
+                
+                const isDeposit = tx.cost < 0;
+                const costDisplay = isDeposit 
+                    ? `+ RM ${Math.abs(tx.cost).toLocaleString()}` 
+                    : `- RM ${tx.cost.toLocaleString()}`;
+                const badgeText = isDeposit ? "DEPOSIT" : "SETTLED";
+                const badgeClass = isDeposit 
+                    ? "bg-teal-500/10 text-teal-300 border-teal-500/20" 
+                    : "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
+                
+                card.innerHTML = `
+                    <div class="space-y-1">
+                        <p class="font-extrabold text-slate-200 leading-tight">${tx.itemName}</p>
+                        <p class="text-[10px] text-slate-500 flex items-center gap-1">
+                            <i class="fa-regular fa-clock"></i> ${tx.date}
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <span class="${isDeposit ? 'text-teal-400' : 'text-emerald-400'} font-extrabold text-[13px] block">${costDisplay}</span>
+                        <span class="px-1.5 py-0.5 rounded text-[8px] font-extrabold ${badgeClass} border">${badgeText}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Re-write of all window confirmations using CUSTOM NON-BLOCKING DIALOG MODAL
+        window.triggerResetWithConfirm = function() {
+            showCustomConfirm(
+                "Reset Semua Data? ⚠️",
+                "Tindakan ini akan memadam data semasa anda dan mengembalikan semua rekod asal seperti dalam nota-nota bertulis anda. Anda pasti?",
+                async function() {
+                    state.items = [...SEED_TRACKER_ITEMS];
+                    state.transactions = [];
+                    state.currentPool = 1500;
+                    updatePoolUI();
+                    
+                    saveStateLocally();
+
+                    if (state.isFirebaseConnected) {
+                        await pushItemsToCloud();
+                        await pushSettingsToCloud();
+                    } else {
+                        renderItems();
+                        renderTransactions();
+                        recalculateTotals();
+                    }
+                    showCustomAlert("Selesai Reset ✅", "Data asal daripada nota image_ff5e40.png & WhatsApp Image 2026-07-13 at 12.44.29.jpeg berjaya dimuatkan semula!", "success");
+                }
+            );
+        }
+
+        window.triggerClearTxWithConfirm = function() {
+            showCustomConfirm(
+                "Kosongkan Resit Transaksi?",
+                "Adakah anda pasti mahu memadam semua rekod sejarah transaksi aliran keluar masuk secara kekal?",
+                async function() {
+                    state.transactions = [];
+                    saveStateLocally();
+
+                    if (state.isFirebaseConnected) {
+                        await pushSettingsToCloud();
+                    } else {
+                        renderTransactions();
+                    }
+                    showCustomAlert("Telah Dikosongkan!", "Sejarah aliran resit transaksi anda telah dibersihkan sepenuhnya.", "info");
+                }
+            );
+        }
+
+        window.triggerDeleteItemWithConfirm = function(iteMINOR) {
+            showCustomConfirm(
+                "Padam Sasaran Kewangan?",
+                "Adakah anda pasti ingin mengeluarkan item ini secara kekal daripada senarai semakan?",
+                async function() {
+                    state.items = state.items.filter(item => item.id !== iteMINOR);
+                    saveStateLocally();
+
+                    if (state.isFirebaseConnected) {
+                        await pushItemsToCloud();
+                    } else {
+                        renderItems();
+                        recalculateTotals();
+                    }
+                }
+            );
+        }
+
+        // Custom Confirm Trigger Controller
+        window.showCustomConfirm = function(title, message, onConfirmCallback) {
+            const modal = document.getElementById('customConfirmModal');
+            document.getElementById('confirmTitle').innerText = title;
+            document.getElementById('confirmMessage').innerText = message;
+            customConfirmCallback = onConfirmCallback;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        window.handleCustomConfirm = function(hasConfirmed) {
+            const modal = document.getElementById('customConfirmModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+
+            if (hasConfirmed && customConfirmCallback) {
+                customConfirmCallback();
+            }
+            customConfirmCallback = null;
+        }
+
+        // Quotes generator transitions
+        window.triggerNewQuote = function() {
+            const textEl = document.getElementById('quoteText');
+            const transEl = document.getElementById('quoteTranslate');
+
+            const randIndex = Math.floor(Math.random() * HUSTLE_QUOTES.length);
+            const quote = HUSTLE_QUOTES[randIndex];
+
+            textEl.classList.add('opacity-0');
+            transEl.classList.add('opacity-0');
+
+            setTimeout(() => {
+                textEl.innerText = `"${quote.me}"`;
+                transEl.innerText = `"${quote.en}"`;
+                textEl.classList.remove('opacity-0');
+                transEl.classList.remove('opacity-0');
+            }, 200);
+        }
+
+        window.setFilter = function(filterVal) {
+            state.activeFilter = filterVal;
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-slate-800 text-slate-300 cursor-pointer";
+            });
+
+            const activeBtn = document.getElementById(`tab-${filterVal}`);
+            if (activeBtn) {
+                activeBtn.className = "tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-indigo-600 text-white shadow-md shadow-indigo-950 cursor-pointer";
+            }
+
+            renderItems();
+        }
+
+        window.toggleAddForm = function() {
+            const form = document.getElementById('addItemForm');
+            form.classList.toggle('hidden');
+        }
+
+        window.addNewItemSubmit = async function() {
+            const name = document.getElementById('newItemName').value.trim();
+            const cost = Number(document.getElementById('newItemCost').value);
+            const urgency = document.getElementById('newItemUrgency').value;
+            const category = document.getElementById('newItemCategory').value;
+
+            if (!name || isNaN(cost) || cost <= 0) {
+                showCustomAlert("Input Tidak Sah ⚠️", "Sila masukkan nama item dan anggaran kos RM yang sah.", "warning");
+                return;
+            }
+
+            const newItem = {
+                id: 'custom_' + Date.now(),
+                name: name,
+                cost: cost,
+                urgency: urgency,
+                category: category,
+                completed: false
+            };
+
+            state.items.push(newItem);
+            saveStateLocally();
+
+            document.getElementById('newItemName').value = '';
+            document.getElementById('newItemCost').value = '';
+            
+            toggleAddForm();
+
+            if (state.isFirebaseConnected) {
+                await pushItemsToCloud();
+            } else {
+                renderItems();
+                recalculateTotals();
+            }
+
+            showCustomAlert("Berjaya Ditambah! 🎉", `Sasaran "${name}" bernilai RM ${cost} sedia dijejak.`, "success");
+        }
+
+        window.toggleFirebaseModal = function() {
+            const modal = document.getElementById('firebaseModal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
+        }
+
+        // Custom replacement alerts dialog
+        window.showCustomAlert = function(title, message, type = "info") {
+            const modal = document.getElementById('customAlertModal');
+            const titleEl = document.getElementById('alertTitle');
+            const msgEl = document.getElementById('alertMessage');
+            const iconEl = document.getElementById('alertIcon');
+
+            titleEl.innerText = title;
+            msgEl.innerText = message;
+
+            if (type === "error") {
+                iconEl.className = "w-14 h-14 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center text-2xl mx-auto mb-4";
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+            } else if (type === "success") {
+                iconEl.className = "w-14 h-14 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl mx-auto mb-4";
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            } else if (type === "warning") {
+                iconEl.className = "w-14 h-14 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center text-2xl mx-auto mb-4";
+                iconEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            } else {
+                iconEl.className = "w-14 h-14 rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-2xl mx-auto mb-4";
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        window.closeCustomAlert = function() {
+            document.getElementById('customAlertModal').classList.add('hidden');
+            document.getElementById('customAlertModal').classList.remove('flex');
+        }
+
+        // Initialize App Lifecycle on window load
+        window.onload = function() {
+            loadState();
+            initializeFirebaseSync().then(() => {
+                if (!state.isFirebaseConnected) {
+                    renderItems();
+                    renderTransactions();
+                    recalculateTotals();
+                }
+            });
+
+            triggerNewQuote();
+            setInterval(() => {
+                triggerNewQuote();
+            }, 60000); // Rotate quotes every 60 seconds
+        };
+    </script>
+</body>
+</html>
